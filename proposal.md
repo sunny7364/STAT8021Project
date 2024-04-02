@@ -19,6 +19,8 @@ DUE on April 7th, work!!!
 
 ## Dataset Explaination and Preprocessing
 
+In this part, we are focus on the dataset choosing and preprocessing. As traditional KGs do, we can use the NOT4j as our data set. This data set is open resource and free. It also has many well-done KGs, so we can use them directly. 
+
 
 ## Demo and Interpretation
 
