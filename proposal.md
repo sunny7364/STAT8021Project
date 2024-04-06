@@ -1,7 +1,5 @@
 # Proposal of this project
 
-[toc]
-
 DUE on April 7th, work!!!
 
 钟韵涵：introduction，idea and why, past paper（？）
@@ -67,9 +65,52 @@ The amalgamation of Large Language Models (LLMs) with Knowledge Graphs harnesses
 - A notable deficiency in domain-specific or newly emerging knowledge due to training on static corpora.
 
 
-## Data Set Description
+## Dataset Selection
 
-As part of this proposal, our team will be responsible for curating and preparing the data set from the NOT4J database. NOT4J is a comprehensive knowledge graph that contains a wide range of structured information, including entities, relationships, and attributes across different domains. The data set will include a subset of relevant entities, relationships, and attributes from NOT4J that are essential for enhancing the contextual understanding of language models.
+### Overview of the Dataset
+
+Our proposed recommendation system will leverage a comprehensive dataset consisting of 140,502 movie records and 72,959 individual records (actors and directors). The movie dataset encompasses a broad spectrum of information including titles, actors, directors, genres, release dates, ratings, and more, dating up to the year 2019. Similarly, the individual dataset provides detailed information on actors and directors, forming a rich basis for analysis.
+
+### Rationale for Dataset Selection
+
+**Richness and Depth:** The chosen dataset offers an extensive range of fields covering nearly every aspect of movie information. This depth facilitates a multifaceted analysis of movies based on various attributes such as genre, directorial style, cast ensemble, and audience reception.
+
+**Temporal Span and Volume:** The dataset's coverage of movies up to 2019, including unreleased titles, provides a wide temporal span for trend analysis. The substantial volume of records ensures statistical significance in data-driven insights.
+
+**Potential for Network Analysis:** With detailed actor and director information linked to movies, the dataset is primely suited for constructing complex relational networks. This aspect is crucial for our goal of building a knowledge graph that mirrors the intricate web of relationships in the film industry.
+
+## Database Selection
+
+### Choice of Database: Neo4j
+
+**Neo4j** is a high-performance graph database management system renowned for its efficiency in handling highly connected data. It supports storing vast amounts of data in graph structures and executing complex queries with high efficiency.
+
+### Justification for Database Selection
+
+**Optimized for Connected Data:** Neo4j's graph database structure is inherently designed to manage and query connected data. This feature aligns perfectly with our objective of analyzing relationships within the movie industry, making Neo4j an ideal choice.
+
+**Scalability and Performance:** Neo4j offers robust scalability and performance capabilities, essential for handling our dataset's volume and complexity. Its ability to efficiently execute complex queries ensures that our recommendation system can operate in real-time.
+
+**Community and Support:** Neo4j boasts a strong community and extensive documentation, providing valuable resources for development and troubleshooting. This support network is crucial for the successful implementation and maintenance of our system.
+
+## Data Preprocessing and Import Steps
+
+### Data Preprocessing
+
+1. **Data Cleaning:** We will remove duplicate entries, handle missing values by imputation or deletion, and standardize formats across fields to ensure data consistency.
+   
+2. **Data Standardization:** Names and aliases will be unified under a single standard, and languages and regions will be standardized using ISO codes.
+
+3. **Data Transformation:** Relationships between movies and individuals (actors/directors) will be explicitly defined, facilitating the construction of our knowledge graph.
+
+### Data Import into Neo4j
+
+1. **Formatting Data:** The preprocessed data will be formatted into CSV files or directly into Cypher statements, depending on the import method chosen.
+
+2. **Utilizing Neo4j's Import Tools:** For bulk data importation, we will employ Neo4j's `neo4j-admin import` tool. For incremental updates or smaller datasets, the `LOAD CSV` Cypher command will be used.
+
+3. **Building the Knowledge Graph:** Once imported, we will define entities (movies, actors, directors) and their relationships within Neo4j to form the backbone of our knowledge graph.
+
 
 
 
