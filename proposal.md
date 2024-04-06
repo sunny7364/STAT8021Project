@@ -64,7 +64,6 @@ The amalgamation of Large Language Models (LLMs) with Knowledge Graphs harnesses
 - Indecisiveness inherent in probabilistic reasoning models.
 - A notable deficiency in domain-specific or newly emerging knowledge due to training on static corpora.
 
-This academic discourse elucidates the transformative potential of integrating Knowledge Graphs with Large Language Models in recommendation systems. By leveraging their complementary strengths, this hybrid approach not only overcomes inherent limitations but also sets a new benchmark for accuracy, diversity, and interpretability in recommendation mechanisms.
 
 ## Data Set Description
 
