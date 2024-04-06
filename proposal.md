@@ -1,5 +1,7 @@
 # Proposal of this project
 
+[toc]
+
 DUE on April 7th, work!!!
 
 钟韵涵：introduction，idea and why, past paper（？）
