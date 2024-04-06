@@ -149,7 +149,7 @@ $$
 As RoG framework using the modules metioned to improve LLM, we jointly optimize them together during training or tuning process. In this, we add KL loss of planning and the FiD loss of retrieval-reasoning as the final objective of our model.
 
 $$
-L = \log P_\theta(a|q, Z_{K^*} , G) + \frac{1}{|Z^*|} \sum_{z \in Z^*} \log P_\theta(z|q)
+L = \log P_\theta(a|q, Z_K , G) + \frac{1}{|Z|} \sum_{z \in Z} \log P_\theta(z|q)
 $$
 
 
