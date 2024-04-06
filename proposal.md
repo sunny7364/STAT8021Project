@@ -127,21 +127,31 @@ P_\theta (a|q, G) = \sum_{z \in Z} P_\theta(a|q, z, G)P_\theta(z|q)
 $$
 
 where $(P_\theta(a|q, z, G))$ is for the probability of inferring answer **a**, given question **q**, relation path **z**, and a knowledge graph **G**, $P_\theta(z|q)$ is the probability of generating a reliable relation path z supported by G.
+
 The objective of planning optimization is to distill knowledge from KGs into LLMs to generate reliable relation paths as plans. In this case, we minimize KL Divergence of the posterior distribution $Q(z)$ to approach effective relation paths. Evidence Lower Bound (ELBO) optimization formula is given by:
+
 $$
 \log P(a|q, G) \geq E_{z \sim Q(z)}[\log P_\theta(a|q, z, G)] - D_{KL}(Q(z) \| P_\theta(z|q))
 $$
+
 Where $Q(z)$ is for the posterior distribution of reliable relation paths supported by KGs, the first term encoraging generation of correct answer based on the relation path and KGs, the second term minimizes the KL divergence between the posterior and the prior, encouraging the generation of reliable relation paths. 
+
 ### Retrieval-Reasoning
+
 Retrieval-reasoning optimization focuses on enabling LLMs to perform reasoning based on retrieved reasoning paths. This process utilizes the FiD framework, facilitating reasoning across multiple paths using
+
 $$
 P_\theta(a|q, Z, G) = \prod_{z \in Z} P_\theta(a|q, z, G)
 $$
+
 ### Joint Optimization
+
 As RoG framework using the modules metioned to improve LLM, we jointly optimize them together during training or tuning process. In this, we add KL loss of planning and the FiD loss of retrieval-reasoning as the final objective of our model.
+
 $$
 L = \log P_\theta(a|q, Z_{K^*} , G) + \frac{1}{|Z^*|} \sum_{z \in Z^*} \log P_\theta(z|q)
 $$
+
 
 
 ## Expected Outcomes
