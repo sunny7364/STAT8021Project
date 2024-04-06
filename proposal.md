@@ -115,13 +115,17 @@ Our proposed recommendation system will leverage a comprehensive dataset consist
 
 
 ## Methodology
+
 We proposed our method based on Reasoning on Graph method, using Knowledge Graphs to leverage the explaination and reasoning ability of LLMs. The framework is implemented by 2 modules, which are planning module and retieval-reasoning module. With jointly optimization, we are able to tune the LLM together with KG reasoning process.
+
 ### Planning
 The reasoning on graphs framework enhances the reasoning capabilities of LLM through Planning-Retrieval-Reasoning process. Here, planning module is used to generate relation paths supported by knowledge graphs, which then be constructed to retrieve effective reasoning paths.
 It can be considered as an optimization problem, and the optimization target formula for Planning-Retrieval-Reasoning is articulated as:
+
 $$
 P_\theta (a|q, G) = \sum_{z \in Z} P_\theta(a|q, z, G)P_\theta(z|q)
 $$
+
 where $(P_\theta(a|q, z, G))$ is for the probability of inferring answer **a**, given question **q**, relation path **z**, and a knowledge graph **G**, $P_\theta(z|q)$ is the probability of generating a reliable relation path z supported by G.
 The objective of planning optimization is to distill knowledge from KGs into LLMs to generate reliable relation paths as plans. In this case, we minimize KL Divergence of the posterior distribution $Q(z)$ to approach effective relation paths. Evidence Lower Bound (ELBO) optimization formula is given by:
 $$
