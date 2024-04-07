@@ -1,15 +1,5 @@
 # Proposal of this project
 
-DUE on April 7th, work!!!
-
-钟韵涵：introduction，idea and why, past paper（？）
-
-程水齐：algorithm，methodology
-
-余加阳：dataset explanation? preprocessing？
-
-杨文瀚：demo+interpretation
-
 
 ## Introduction
 In our group project, what we are going to do is an interpretable personalized recommendation system based on Synergized LLM and KG reasoning.
@@ -152,17 +142,25 @@ $$
 L = \log P_\theta(a|q, Z_K , G) + \frac{1}{|Z|} \sum_{z \in Z} \log P_\theta(z|q)
 $$
 
+## Project Timeline
 
+1. Week 1: Research and Design (completed)
 
-## Expected Outcomes
+2. Week 2: Development: (compeleted)
+   - Begin coding, focusing on integrating LLMs with KGs.
+   - Collect and preprocess the dataset. 
 
+3. Week 3: Implementation and Testing
+   - Complete the system build and start initial testing.
+   - Refine algorithms for enhanced performance.
 
+4. Week 4: Evaluation
+   - Conduct evaluations to gather feedback.
+   - Make adjustments based on performance analysis and feedback.
 
-## Timeline
-
-
+5. Week 5: Documentation and Finalization
 
 ## Conclusion
 
-
+In essence, our project endeavors to revolutionize personalized recommendation systems by amalgamating LLMs with KGs, aiming for superior accuracy, contextual relevance, and interpretability. This approach strategically addresses prevalent issues such as data sparsity and the cold start problem, while significantly enhancing reasoning and personalization capabilities. Through a meticulous process encompassing planning, retrieval, and reasoning, we seek to leverage the synergistic potential of LLMs and KGs. Our commitment to continuous refinement and expansion of our dataset underscores our aspiration to set new benchmarks in system performance and user engagement. As we progress, our focus remains steadfast on pioneering a recommendation system that not only meets but exceeds current expectations, heralding a new era of intelligent, user-centric technology.
 
