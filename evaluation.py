@@ -67,7 +67,7 @@ sys.stdout = sys.__stdout__
 
 import statistics
 
-with open('output2.txt', 'r') as file:
+with open('output.txt', 'r') as file:
     lines = file.readlines()
 
 faithfulness_list = []
