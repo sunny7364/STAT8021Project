@@ -5,10 +5,10 @@ def parse_args_kgsr():
     parser = argparse.ArgumentParser(description="MKG")
     # ===== log ===== #
     parser.add_argument('--desc', type=str, default="", help='EXP description')
-    parser.add_argument('--log', action='store_true', default=False, help='log in file or not')
-    parser.add_argument('--log_fn', type=str, default="test_kgrec", help='log file_name')
+    parser.add_argument('--log', action='store_true', default=True, help='log in file or not')
+    parser.add_argument('--log_fn', type=str, default="ml_kgrec", help='log file_name')
     # ===== dataset ===== #
-    parser.add_argument("--dataset", nargs="?", default="mind-f", help="Choose a dataset:[last-fm,amazon-book,alibaba]")
+    parser.add_argument("--dataset", nargs="?", default="movie", help="Choose a dataset:[last-fm,amazon-book,alibaba,mind-f,movie]")
     parser.add_argument(
         "--data_path", nargs="?", default="data/", help="Input data path."
     )
