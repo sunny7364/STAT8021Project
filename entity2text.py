@@ -7,7 +7,7 @@ import random
 from tqdm import tqdm
 import networkx as nx
 import pandas as pd
-from utils.data_loader import  train_user_set, test_user_set,n_items
+from utils.data_loader import  train_user_set, test_user_set,n_items,load_kg_map
 from utils.parser import parse_args_kgsr as parse_args
 import numpy as np
 import pickle
@@ -110,8 +110,7 @@ class Entity2TextGraph:
         self.entity_idsdf = self.read_entity_ids(args)
         self.entity_idsdf.set_index('remap_id', inplace=True)
         self.relation_idsdf = self.read_realtion_ids(args)
-
-
+        self.r_id_txt=True
         # self.graph = nx.Graph()
         # self.id2text = {}
         # self.text2id = {}
@@ -183,7 +182,6 @@ class Entity2TextGraph:
             entity_ids.to_csv(directory + 'entity_list.csv', index=False)
         else:
             entity_ids = pd.read_csv(directory + 'entity_list.csv', header=0)
-
         if not os.path.exists(directory + '/user_id_kg/'):
             os.makedirs(directory + '/user_id_kg/')
         return entity_ids
@@ -228,8 +226,11 @@ class Entity2TextGraph:
         return entity_name
 
     def relation_id2text(self,relation_id):
-        row = self.relation_idsdf.loc[relation_id]
-        return row['relation']
+        if not self.r_id_txt:
+            return relation_id
+        else:
+            row = self.relation_idsdf.loc[relation_id]
+            return row['relation']
     def plot_graph(self,G,savedPtah=None):
         import matplotlib.pyplot as plt
         G = nx.DiGraph(G)
@@ -322,6 +323,8 @@ class Entity2TextGraph:
             if current_node in visited or current_depth > max_depth:
                 continue
             visited.add(current_node)
+            if current_node not in ckg_graph:
+                continue
             neighbors = ckg_graph[current_node].items()
             if len(neighbors) > max_neighbors:
                 print(current_node, "has too many neighbors:", len(neighbors))
@@ -400,7 +403,7 @@ class Entity2TextGraph:
         print('combinating train_cf and kg data ...')
         triplets = read_triplets(directory + 'kg_final.txt')
         print('building the graph ...')
-        graph, relation_dict = self.build_graph(train_cf, triplets,False)
+        graph, relation_dict = self.build_graph(train_cf, triplets,directed=False)
         self.directory = directory
         return graph
     def chekc_connectity(self,model_args):
@@ -415,12 +418,13 @@ class Entity2TextGraph:
         #     u_graph= graph.subgraph(items)
         #     print(len(train_items),len(test_user_set[u]),len(u_graph.edges()))
     def generate_dataset(self,model_args,max_depth):
-        graph= self.init_data(model_args)
+        graph= self.init_data(model_args) #undirected
         degrees = graph.degree()
         max_item_ids = n_items - 1
         high_degree_nodes = [node for node, degree in degrees if degree > 2000]
         for node_to_remove in high_degree_nodes:
             graph.remove_node(node_to_remove)
+        print("removed nodes: ", high_degree_nodes)
         small_users=[key for key, value in train_user_set.items() if len(value) < 100]
         n=100
         if len(small_users) < n:
@@ -428,11 +432,13 @@ class Entity2TextGraph:
         else:
             sampled_users = random.sample(small_users, n)
         user_covered_items = {}
+
+        sampled_users=[i for i in range(1,30)]
         for u_id in sampled_users:
             train_i_ids = [node for node in train_user_set[u_id] if node not in high_degree_nodes]
             test_i_ids = [node for node in test_user_set[u_id] if node not in high_degree_nodes]
-            # user_items = {"train": train_i_ids, "test": test_i_ids}
-            user_items = {"all": train_i_ids+test_i_ids}
+            user_items = {"train": train_i_ids}
+            # user_items = {"all": train_i_ids+test_i_ids} # "test": test_i_ids
             for data_type, i_ids in user_items.items():
                 print("len of items", len(i_ids))
                 # id_kg, item_in, visited = self.build_subgraph_bfs(i_ids, graph, max_item_ids,
@@ -504,22 +510,24 @@ class Entity2TextGraph:
         degrees = graph.degree()
         max_item_ids = n_items - 1
         high_degree_nodes = [node for node, degree in degrees if degree > 2000]
+        print("removed nodes: ", high_degree_nodes)
         for node_to_remove in high_degree_nodes:
             graph.remove_node(node_to_remove)
-        sampled_users = self.get_sampled_users(adding=True)
+        # sampled_users = self.get_sampled_users(adding=True)
+        sampled_users=[i for i in range(500)]
         data_type="pure_train"
         user_data={}
         for u_id in tqdm(sampled_users):
-            train_i_ids = [node for node in train_user_set[u_id] if node not in high_degree_nodes]
+            train_i_ids = [node for node in train_user_set[u_id] if node not in high_degree_nodes and node in graph.nodes()]
             # train_i_ids=self.find_connected_nodes(train_i_ids,graph)
-            id_kg=self.bfs_nodes(train_i_ids, graph, max_depth=max_depth, max_neighbors=200)
+            id_kg=self.bfs_nodes(train_i_ids, graph, max_depth=max_depth, max_neighbors=2000)
             user_data[u_id]=id_kg
             print("len of nodes", len(id_kg.nodes()),"len of edges", len(id_kg.edges()))
         directory = args.data_path + args.dataset + '/'
         train_cf = read_cf(directory + 'train.txt')
         triplets = read_triplets(directory + 'kg_final.txt')
         print('building the directed graph ...')
-        biG, _ = self.build_graph(train_cf, triplets, True)
+        biG, _ = self.build_graph(train_cf, triplets, directed=True)
         for u_id, id_kg in user_data.items():
             id_kg=self.undirected2directed(biG, id_kg)
             with open(args.data_path + args.dataset + '/user_id_kg/' + str(u_id) + '_Multi_' + data_type + '.pkl', 'wb') as f:
@@ -584,10 +592,12 @@ if __name__ == '__main__':
     """build dataset"""
     ukg_built=Entity2TextGraph(args)
     ukg_built.multi_edge=True
+    ukg_built.r_id_txt=False
 
     # print(len(ukg_built.entity_idsdf.loc[1]["name"]))
     depth = 2
     ukg_built.generate_id_datsets(args,depth)
+    #知识图谱中，item没有triples
     # ukg_built.regenerate_text_dataset(args,depth)
     # ukg_built.chekc_connectity(args)
     # ukg_built.generate_dataset(args,depth)

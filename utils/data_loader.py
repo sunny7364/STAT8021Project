@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -9,7 +11,7 @@ from time import time
 from collections import defaultdict, deque
 import warnings
 warnings.filterwarnings('ignore')
-
+from utils.wikiAPI import get_relation_by_id
 n_users = 0
 n_items = 0
 n_entities = 0
@@ -45,7 +47,41 @@ def remap_item(train_data, test_data):
         train_user_set[int(u_id)].append(int(i_id))
     for u_id, i_id in test_data:
         test_user_set[int(u_id)].append(int(i_id))
-
+def load_kg_map(args):
+    if  args.dataset!='movie':
+        global n_users, n_items, n_entities, n_relations, n_nodes,can_relation_range, inv_relation_range
+        data_path = args.data_path + args.dataset + '/'
+        entity_map = data_path + 'entity_list.txt'
+        entity_map = pd.read_csv(entity_map, sep='\s+')
+        # 创建一个字典，以remap_id为键，(org_id, freebase_id)元组为值
+        remap_id_dict = entity_map.set_index('remap_id')[['freebase_id']].to_dict('index')
+        if not os.path.exists(data_path + 'relation_list.csv'):
+            relation_ids = pd.read_csv(data_path + 'relation_list.txt', sep='\s+', header=0)
+            relation_ids['org_id'] = relation_ids["org_id"].str.split(".").str[-1]
+            relation_ids["name"]=relation_ids["org_id"].apply(get_relation_by_id)
+            relation_ids.to_csv(data_path + 'relation_list.csv', index=False)
+        else:
+            relation_ids = pd.read_csv(data_path + 'relation_list.csv')
+        remap_relation_dict = relation_ids.set_index('remap_id')[['org_id', 'name']].to_dict('index')
+    else:
+        global n_users, n_items, n_entities, n_relations, n_nodes,can_relation_range, inv_relation_range
+        data_path = args.data_path + args.dataset + '/'
+        entity_map = data_path + 'new_e_map.csv'
+        entity_map = pd.read_csv(entity_map, sep='\s+')
+        entity_map['name'] = entity_map['url'].apply(lambda x: x.split('/')[-1])
+        # 创建一个字典，以remap_id为键，(org_id, freebase_id)元组为值
+        remap_id_dict = entity_map.set_index('ordered_id')[['name']].to_dict('index')
+        if not os.path.exists(data_path + 'relation_list.csv'):
+            relation_ids = pd.read_csv(data_path + 'new_r_map.txt', sep='\s+', header=0)
+            relation_ids["ordered_r"]=relation_ids["ordered_r"].astype(int)
+            relation_ids["name"] = relation_ids["url"].apply(lambda x: x.split('/')[-1])
+            # relation_ids['org_id'] = relation_ids["org_id"].str.split(".").str[-1]
+            # relation_ids["name"]=relation_ids["org_id"].apply(get_relation_by_id)
+            relation_ids.to_csv(data_path + 'relation_list.csv', index=False)
+        else:
+            relation_ids = pd.read_csv(data_path + 'relation_list.csv')
+        remap_relation_dict = relation_ids.set_index('ordered_r')[['name']].to_dict('index')
+    return remap_id_dict, remap_relation_dict
 
 def read_triplets(file_name):
     global n_entities, n_relations, n_nodes,can_relation_range, inv_relation_range

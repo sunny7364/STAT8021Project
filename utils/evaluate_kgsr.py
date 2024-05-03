@@ -1,4 +1,7 @@
 import json
+import pickle
+
+import pandas as pd
 
 from .metrics import *
 from .parser import parse_args_kgsr
@@ -113,7 +116,6 @@ def select_success_user(user_dict,n_params):
         userJsonEmbed = json.load(f)
 
 
-
     with open('itemJsonEmbed.json', 'r') as f:
         itemJsonEmbed = json.load(f)
     user_pos_test = test_user_set['test_user_set']
@@ -191,7 +193,6 @@ def get_user_emb_item(u_id,model,user_dict, n_params):
     item_score = {}
     for i in test_items:
         item_score[i] = rate_batch[i]
-
     K_max = max(Ks)
     K_max_item_score = heapq.nlargest(K_max, item_score, key=item_score.get)
     print(K_max_item_score)
