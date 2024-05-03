@@ -1,0 +1,17 @@
+org_id remap_id
+http://dbpedia.org/ontology/cinematography 0
+http://dbpedia.org/property/productionCompanies 1
+http://dbpedia.org/property/composer 2
+http://purl.org/dc/terms/subject 3
+http://dbpedia.org/ontology/openingFilm 4
+http://dbpedia.org/property/story 5
+http://dbpedia.org/ontology/series 6
+http://www.w3.org/1999/02/22-rdf-syntax-ns#type 7
+http://dbpedia.org/ontology/basedOn 8
+http://dbpedia.org/ontology/starring 9
+http://dbpedia.org/ontology/country 10
+http://dbpedia.org/ontology/editing 11
+http://dbpedia.org/property/producers 12
+http://dbpedia.org/property/notableWork 13
+http://dbpedia.org/ontology/director 14
+http://dbpedia.org/ontology/award 15
