@@ -3,7 +3,6 @@ import requests
 class LLM:
     def __init__(self) -> None:
         # self.url = "https://mtc2023australia.openai.azure.com/openai/deployments/gpt-35-turbo-1106/chat/completions?api-version=2023-07-01-preview"
-        # self.key = '30e1842328f34dbf8f6e234527af5403'
         
         self.url = "https://api.132006.xyz/v1/chat/completions"
         
